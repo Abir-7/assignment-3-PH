@@ -3,6 +3,7 @@ import { AuthController } from './auth.controller';
 import validationMiddleware from '../../Middleware/validationMiddleware';
 import { userZodValidationSchema } from '../user/user.validation';
 import { AuthValidation } from './auth.validation';
+import { auth } from '../../Middleware/auth';
 
 const router = Router();
 
@@ -17,4 +18,5 @@ router.post(
   validationMiddleware(AuthValidation.loginValidationSchema),
   AuthController.loginUser,
 );
+
 export const AuthRouter = router;
