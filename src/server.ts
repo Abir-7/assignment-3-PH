@@ -7,7 +7,7 @@ let server: Server;
 async function main() {
   await mongoose.connect(config.databaseUri as string);
 
-  server = app.listen(config.port, () => {
+  server = app.listen(Number(config.port), () => {
     console.log(`Example app listening on port ${config.port}`);
   });
 }
