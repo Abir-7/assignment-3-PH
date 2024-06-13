@@ -13,6 +13,7 @@ const createUserIntoDB = async (userData: T_User) => {
 const userLogin = async (logInData: T_UserLogin) => {
   const user = await User.findOne({ email: logInData.email }).select(['-__v']);
   if (!user) {
+    return user;
     throw new AppError(
       httpStatus.NOT_FOUND,
       'User not found! Please Check your email.',
@@ -44,7 +45,14 @@ const userLogin = async (logInData: T_UserLogin) => {
 
   return {
     accessToken: `Bearer ${accessToken}`,
-    user,
+    user: {
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      phone: user.phone,
+      address: user.address,
+    },
   };
 };
 

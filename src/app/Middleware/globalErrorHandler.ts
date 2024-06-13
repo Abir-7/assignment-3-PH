@@ -60,11 +60,11 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
     ];
   }
 
-  return sendResponse(res, {
+  return res.status(statusCode).json({
     message: message,
     success: false,
     statusCode: statusCode,
-    data: errorSource,
+    errorMessages: errorSource,
   });
 };
 
