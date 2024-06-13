@@ -61,10 +61,13 @@ const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   }
 
   return res.status(statusCode).json({
-    message: message,
     success: false,
     statusCode: statusCode,
-    errorMessages: errorSource,
+    message: message,
+    ...(message !== 'You have no access to this route' && {
+      errorMessages: errorSource,
+      stack: err?.stack,
+    }), // config.node_env == 'development' ? err?.stack : null,
   });
 };
 

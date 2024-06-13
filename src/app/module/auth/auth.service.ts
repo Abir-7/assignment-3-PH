@@ -29,7 +29,7 @@ const userLogin = async (logInData: T_UserLogin) => {
       'Password not matched! Please check your password',
     );
   }
-
+  console.log(user._id, 'auth');
   //createing access token
   const userJWtData = {
     email: user.email,

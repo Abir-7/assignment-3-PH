@@ -1,15 +1,20 @@
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
-import { T_BookTime } from './booking.interface';
+import { T_Booking, T_BookTime } from './booking.interface';
+import { Types } from 'mongoose';
 
 export const getTotalTimeInHour = (startTime: string, endTime: string) => {
   const startDate = new Date(`2000-01-01T${startTime}:00`);
   const endDate = new Date(`2000-01-01T${endTime}:00`);
   const timeDiff = endDate.getTime() - startDate.getTime();
-  const timeDiffHours = Math.floor(timeDiff / 3600000);
-  return timeDiffHours;
-};
 
+  const hours = Math.floor(timeDiff / 3600000);
+  const minutes = Math.floor((timeDiff % 3600000) / 60000);
+
+  const timeDiffInHours = hours + minutes / 100;
+  console.log(timeDiffInHours, 'time');
+  return timeDiffInHours;
+};
 export const hasTimeConflict = (
   assignedBooktime: T_BookTime[],
   newBookTime: Partial<T_BookTime>,
@@ -53,4 +58,26 @@ export const convertDate = (date: string) => {
   }
 
   throw new AppError(httpStatus.BAD_REQUEST, 'Invalid date');
+};
+
+export const findAvailableTimeSlotForBooking = (booking: T_Booking[]) => {
+  const startHour = 0;
+  const endHour = 24;
+  const timeSlots = [];
+  for (let hour = startHour; hour <= endHour - 2; hour += 2) {
+    timeSlots.push({
+      startTime: `${hour.toString().padStart(2, '0')}:00`,
+      endTime: `${(hour + 2).toString().padStart(2, '0')}:00`,
+    });
+  }
+
+  // Step 3: Filter out the time slots that overlap with existing bookings
+  const availableTimeSlots = timeSlots.filter((slot) => {
+    return !booking.some((booking) => {
+      return (
+        booking.startTime < slot.endTime && booking.endTime > slot.startTime
+      );
+    });
+  });
+  return availableTimeSlots;
 };

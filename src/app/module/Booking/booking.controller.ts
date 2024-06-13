@@ -7,9 +7,9 @@ import httpStatus from 'http-status';
 import { convertDate } from './booking.utils';
 
 const createBooking: RequestHandler = catchAsync(async (req, res, next) => {
-  //const { id } = req.user;
+  const { id } = req.user;
   const data = req.body;
-  data.user = '66696535f8a2e444c2cc894e';
+  data.user = id;
   const result = await BookingService.createBookingIntoDb(data);
   return sendResponse(res, {
     success: true,
@@ -63,11 +63,11 @@ const deleteBookingByUser: RequestHandler = catchAsync(
 const getAvailableTimeSlots: RequestHandler = catchAsync(
   async (req, res, next) => {
     const date = (req.query?.date as string) || '';
-
     const covertedDate = convertDate(date);
-    console.log(covertedDate, 'text');
+
     const result =
       await BookingService.getAvailableTimeSlotsFromBooking(covertedDate);
+
     return sendResponse(res, {
       success: result.length ? true : false,
       statusCode: result.length ? 200 : 404,

@@ -11,7 +11,7 @@ export const auth = (...userRole: T_UserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
     const tokenData = req.headers.authorization;
     const token = tokenData?.split(' ')[1];
-    console.log(token);
+
     if (!token) {
       throw new AppError(
         httpStatus.UNAUTHORIZED,

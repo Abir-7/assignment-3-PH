@@ -3,7 +3,11 @@ import { Facility } from '../Facility/facility.model';
 import { T_Booking } from './booking.interface';
 import { Booking } from './booking.model';
 import AppError from '../../errors/AppError';
-import { getTotalTimeInHour, hasTimeConflict } from './booking.utils';
+import {
+  findAvailableTimeSlotForBooking,
+  getTotalTimeInHour,
+  hasTimeConflict,
+} from './booking.utils';
 
 const createBookingIntoDb = async (data: T_Booking) => {
   //console.log(data);
@@ -34,7 +38,9 @@ const createBookingIntoDb = async (data: T_Booking) => {
   const totalTime = getTotalTimeInHour(data.startTime, data.endTime);
 
   data.payableAmount = totalTime * isFacilityExist.pricePerHour;
-  const result = ''; //await Booking.create(data);
+  console.log(totalTime);
+  const result = await Booking.create(data);
+
   return result;
 };
 
@@ -43,10 +49,8 @@ const getAllBookingFromDb = async () => {
   return result;
 };
 const getAllBookingByUserFromDb = async (id: string) => {
-  //console.log(id);
-  const result = await Booking.find({ user: id })
-    .populate('user')
-    .populate('facility');
+  console.log(id);
+  const result = await Booking.find({ user: id }).populate('facility');
 
   return result;
 };
@@ -70,28 +74,17 @@ const deleteBookingByUserFromDb = async (id: string) => {
 
 const getAvailableTimeSlotsFromBooking = async (givenDate: string) => {
   const date = givenDate;
-  console.log(date, 'gg');
-  const bookings = await Booking.find({ date: date });
-  // Step 2: Define the full range of available time slots (assuming 8 AM to 9 PM)
 
-  const startHour = 0;
-  const endHour = 24;
-  const timeSlots = [];
-  for (let hour = startHour; hour <= endHour - 2; hour += 2) {
-    timeSlots.push({
-      startTime: `${hour.toString().padStart(2, '0')}:00`,
-      endTime: `${(hour + 2).toString().padStart(2, '0')}:00`,
-    });
+  const bookings = await Booking.find({ date: date }).select([
+    'date',
+    'startTime',
+    'endTime',
+  ]);
+  console.log(bookings);
+  if (!bookings.length) {
+    return bookings;
   }
-
-  // Step 3: Filter out the time slots that overlap with existing bookings
-  const availableTimeSlots = timeSlots.filter((slot) => {
-    return !bookings.some((booking) => {
-      return (
-        booking.startTime < slot.endTime && booking.endTime > slot.startTime
-      );
-    });
-  });
+  const availableTimeSlots = findAvailableTimeSlotForBooking(bookings);
   //console.log(timeSlots, availableTimeSlots, bookings, 'gg');
   return availableTimeSlots;
 };

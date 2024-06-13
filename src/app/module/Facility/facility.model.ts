@@ -4,7 +4,11 @@ import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 
 export const facilitySchema = new Schema<T_Facility>({
-  name: { type: String, required: [true, 'Name is required'], unique: true },
+  name: {
+    type: String,
+    required: [true, 'Facility name is required'],
+    unique: true,
+  },
   description: { type: String, required: [true, 'Description is required'] },
   pricePerHour: {
     type: Number,
