@@ -4,7 +4,7 @@ import { BookingService } from './booking.service';
 import sendResponse from '../../utils/sendResponse';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
-import { convertDate } from './booking.utils';
+import { convertDate, getFormattedDate } from './booking.utils';
 
 const createBooking: RequestHandler = catchAsync(async (req, res, next) => {
   const { id } = req.user;
@@ -48,9 +48,12 @@ const getAllBookingByUser: RequestHandler = catchAsync(
 
 const deleteBookingByUser: RequestHandler = catchAsync(
   async (req, res, next) => {
-    // const { id } = req.user;
-    const { id } = req.params;
-    const result = await BookingService.deleteBookingByUserFromDb(id);
+    const { id: userID } = req.user;
+    const { id: bookingID } = req.params;
+    const result = await BookingService.deleteBookingByUserFromDb(
+      userID,
+      bookingID,
+    );
     return sendResponse(res, {
       success: true,
       statusCode: 200,
@@ -62,18 +65,17 @@ const deleteBookingByUser: RequestHandler = catchAsync(
 
 const getAvailableTimeSlots: RequestHandler = catchAsync(
   async (req, res, next) => {
-    const date = (req.query?.date as string) || '';
+    const formattedDate = getFormattedDate();
+    console.log(formattedDate);
+    const date = (req.query?.date as string) || formattedDate;
     const covertedDate = convertDate(date);
-
     const result =
       await BookingService.getAvailableTimeSlotsFromBooking(covertedDate);
 
     return sendResponse(res, {
-      success: result.length ? true : false,
-      statusCode: result.length ? 200 : 404,
-      message: result.length
-        ? 'Booking available time retrives successfully'
-        : 'No Data Found',
+      success: true,
+      statusCode: 200,
+      message: 'Booking available time retrives successfully',
       data: result,
     });
   },

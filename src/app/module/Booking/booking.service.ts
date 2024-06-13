@@ -55,17 +55,20 @@ const getAllBookingByUserFromDb = async (id: string) => {
   return result;
 };
 
-const deleteBookingByUserFromDb = async (id: string) => {
-  // console.log(id);
+const deleteBookingByUserFromDb = async (userID: string, bookingID: string) => {
+  console.log(userID, bookingID);
 
-  const isBookingExist = await Booking.findById(id);
+  const isBookingExist = await Booking.findOne({
+    _id: bookingID,
+    user: userID,
+  });
 
   if (!isBookingExist) {
     throw new AppError(httpStatus.NOT_FOUND, 'Booking not found');
   }
 
   const result = await Booking.findByIdAndUpdate(
-    id,
+    bookingID,
     { isBooked: 'canceled' },
     { new: true },
   );
@@ -81,9 +84,9 @@ const getAvailableTimeSlotsFromBooking = async (givenDate: string) => {
     'endTime',
   ]);
   console.log(bookings);
-  if (!bookings.length) {
-    return bookings;
-  }
+  // if (!bookings.length) {
+  //   return bookings;
+  // }
   const availableTimeSlots = findAvailableTimeSlotForBooking(bookings);
   //console.log(timeSlots, availableTimeSlots, bookings, 'gg');
   return availableTimeSlots;
