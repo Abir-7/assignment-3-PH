@@ -33,6 +33,7 @@ const userLogin = async (logInData: T_UserLogin) => {
   const userJWtData = {
     email: user.email,
     role: user.role,
+    id: user._id,
   };
 
   const accessToken = createToken(
@@ -42,7 +43,7 @@ const userLogin = async (logInData: T_UserLogin) => {
   );
 
   return {
-    accessToken,
+    accessToken: `Bearer ${accessToken}`,
     user,
   };
 };

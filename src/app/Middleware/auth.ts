@@ -9,10 +9,14 @@ import { User } from '../module/user/user.model';
 
 export const auth = (...userRole: T_UserRole[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-    const token = req.headers.authorization;
-
+    const tokenData = req.headers.authorization;
+    const token = tokenData?.split(' ')[1];
+    console.log(token);
     if (!token) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'You are not autorized');
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        'You have no access to this route',
+      );
     }
 
     const decoded = jwt.verify(
@@ -25,10 +29,19 @@ export const auth = (...userRole: T_UserRole[]) => {
     const user = await User.findOne({ email: email });
     //check user exixt or not
     if (!user) {
-      throw new AppError(httpStatus.NOT_FOUND, 'User not found', '');
+      throw new AppError(
+        httpStatus.NOT_FOUND,
+        'You have no access to this route',
+        '',
+      );
     }
+
     if (userRole && !userRole.includes(role)) {
-      throw new AppError(httpStatus.UNAUTHORIZED, 'You are unautorized', '');
+      throw new AppError(
+        httpStatus.UNAUTHORIZED,
+        'You have no access to this route',
+        '',
+      );
     }
 
     req.user = decoded as JwtPayload;

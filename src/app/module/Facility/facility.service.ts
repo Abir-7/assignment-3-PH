@@ -16,7 +16,7 @@ const updateFacilityIntoDB = async (id: string, data: Partial<T_Facility>) => {
     new: true,
     runValidators: true,
   });
-  console.log(result, 'test');
+  // console.log(result, 'test');
   return result;
 };
 
@@ -29,7 +29,7 @@ const deleteFacilityFromDB = async (id: string) => {
       runValidators: true,
     },
   );
-  console.log(result, 'test');
+  //console.log(result, 'test');
   return result;
 };
 

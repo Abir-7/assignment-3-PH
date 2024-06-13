@@ -7,9 +7,11 @@ const getAllFacility: RequestHandler = catchAsync(async (req, res, next) => {
   const result = await FacilityService.getAllFacilityFromDB();
 
   return sendResponse(res, {
-    success: true,
-    statusCode: 200,
-    message: 'Facilities retrieved successfully',
+    success: result.length ? true : false,
+    statusCode: result.length ? 200 : 404,
+    message: result.length
+      ? 'Facilities retrieved successfully'
+      : 'No Data Found',
     data: result,
   });
 });
