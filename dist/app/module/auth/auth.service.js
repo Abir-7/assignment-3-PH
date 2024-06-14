@@ -24,20 +24,23 @@ const createUserIntoDB = (userData) => __awaiter(void 0, void 0, void 0, functio
     return result;
 });
 const userLogin = (logInData) => __awaiter(void 0, void 0, void 0, function* () {
+    //check if user exist
     const user = yield user_model_1.User.findOne({ email: logInData.email }).select(['-__v']);
     if (!user) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'User not found! Please Check your email.');
     }
+    //check password is matched or not
     const isPasswordMatch = yield bcrypt_1.default.compare(logInData.password, user.password);
     if (!isPasswordMatch) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Password not matched! Please check your password');
     }
-    //createing access token
+    //createing user data to include in token
     const userJWtData = {
         email: user.email,
         role: user.role,
         id: user._id,
     };
+    // create token
     const accessToken = (0, auth_utils_1.createToken)(userJWtData, config_1.default.jwt_secrete_key, config_1.default.jwt_secrete_date);
     return {
         accessToken: `Bearer ${accessToken}`,

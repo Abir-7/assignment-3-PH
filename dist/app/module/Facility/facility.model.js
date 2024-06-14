@@ -39,4 +39,13 @@ exports.facilitySchema.pre('save', function (next) {
         next();
     });
 });
+exports.facilitySchema.statics.isFacitityExist = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    const isFaciExist = yield exports.Facility.findById(id);
+    if (isFaciExist) {
+        return true;
+    }
+    else {
+        false;
+    }
+});
 exports.Facility = (0, mongoose_1.model)('Facility', exports.facilitySchema);

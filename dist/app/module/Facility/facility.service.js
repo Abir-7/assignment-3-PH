@@ -8,8 +8,13 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.FacilityService = void 0;
+const http_status_1 = __importDefault(require("http-status"));
+const AppError_1 = __importDefault(require("../../errors/AppError"));
 const facility_model_1 = require("./facility.model");
 const getAllFacilityFromDB = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield facility_model_1.Facility.find({ isDeleted: false });
@@ -20,6 +25,9 @@ const createFacilityIntoDB = (data) => __awaiter(void 0, void 0, void 0, functio
     return result;
 });
 const updateFacilityIntoDB = (id, data) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!(yield facility_model_1.Facility.isFacitityExist(id))) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Facility not found! update failed.');
+    }
     const result = yield facility_model_1.Facility.findByIdAndUpdate(id, data, {
         new: true,
         runValidators: true,
@@ -27,6 +35,9 @@ const updateFacilityIntoDB = (id, data) => __awaiter(void 0, void 0, void 0, fun
     return result;
 });
 const deleteFacilityFromDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!(yield facility_model_1.Facility.isFacitityExist(id))) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Facility not found! delete failed.');
+    }
     const result = yield facility_model_1.Facility.findByIdAndUpdate(id, { isDeleted: true }, {
         new: true,
         runValidators: true,
