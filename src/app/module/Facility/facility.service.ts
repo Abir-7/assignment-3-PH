@@ -2,6 +2,7 @@ import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { T_Facility } from './facility.interface';
 import { Facility } from './facility.model';
+import mongoose from 'mongoose';
 
 const getAllFacilityFromDB = async () => {
   const result = await Facility.find({ isDeleted: false });
@@ -14,7 +15,7 @@ const createFacilityIntoDB = async (data: T_Facility) => {
 };
 
 const updateFacilityIntoDB = async (id: string, data: Partial<T_Facility>) => {
-  if (!(await Facility.isFacitityExist(id))) {
+  if (!(await Facility.isFacitityExist(new mongoose.Types.ObjectId(id)))) {
     throw new AppError(
       httpStatus.NOT_FOUND,
       'Facility not found! update failed.',
@@ -29,7 +30,7 @@ const updateFacilityIntoDB = async (id: string, data: Partial<T_Facility>) => {
 };
 
 const deleteFacilityFromDB = async (id: string) => {
-  if (!(await Facility.isFacitityExist(id))) {
+  if (!(await Facility.isFacitityExist(new mongoose.Types.ObjectId(id)))) {
     throw new AppError(
       httpStatus.NOT_FOUND,
       'Facility not found! delete failed.',

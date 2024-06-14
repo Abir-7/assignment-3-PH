@@ -1,4 +1,4 @@
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 
 export interface T_Facility {
   name: string;
@@ -9,5 +9,5 @@ export interface T_Facility {
 }
 
 export interface T_Facility_Find_Methods extends Model<T_Facility> {
-  isFacitityExist(id: string): Promise<boolean>;
+  isFacitityExist(id: Types.ObjectId): Promise<boolean>;
 }
