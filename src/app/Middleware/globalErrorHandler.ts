@@ -7,8 +7,6 @@ import {
   handleMongooseError,
 } from '../errors/handleMongooseError';
 import AppError from '../errors/AppError';
-import config from '../config';
-import sendResponse from '../utils/sendResponse';
 
 const globalErrorHandler: ErrorRequestHandler = (err, req, res, next) => {
   let statusCode = 500;

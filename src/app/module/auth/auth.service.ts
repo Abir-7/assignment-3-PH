@@ -6,19 +6,22 @@ import bcrypt from 'bcrypt';
 import { createToken } from './auth.utils';
 import config from '../../config';
 import { T_UserLogin } from './auth.interface';
+
 const createUserIntoDB = async (userData: T_User) => {
   const result = await User.create(userData);
   return result;
 };
+
 const userLogin = async (logInData: T_UserLogin) => {
+  //check if user exist
   const user = await User.findOne({ email: logInData.email }).select(['-__v']);
   if (!user) {
-    return user;
     throw new AppError(
       httpStatus.NOT_FOUND,
       'User not found! Please Check your email.',
     );
   }
+  //check password is matched or not
   const isPasswordMatch = await bcrypt.compare(
     logInData.password,
     user.password,
@@ -29,14 +32,15 @@ const userLogin = async (logInData: T_UserLogin) => {
       'Password not matched! Please check your password',
     );
   }
-  console.log(user._id, 'auth');
-  //createing access token
+
+  //createing user data to include in token
   const userJWtData = {
     email: user.email,
     role: user.role,
     id: user._id,
   };
 
+  // create token
   const accessToken = createToken(
     userJWtData,
     config.jwt_secrete_key as string,

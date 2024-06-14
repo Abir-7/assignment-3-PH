@@ -1,9 +1,9 @@
 import { model, Schema } from 'mongoose';
-import { T_Facility } from './facility.interface';
+import { T_Facility, T_Facility_Find_Methods } from './facility.interface';
 import AppError from '../../errors/AppError';
 import httpStatus from 'http-status';
 
-export const facilitySchema = new Schema<T_Facility>({
+export const facilitySchema = new Schema<T_Facility, T_Facility_Find_Methods>({
   name: {
     type: String,
     required: [true, 'Facility name is required'],
@@ -19,12 +19,23 @@ export const facilitySchema = new Schema<T_Facility>({
 });
 
 facilitySchema.pre('save', async function (next) {
-  const facilityData = this;
-  const isFaciExist = await Facility.findOne({ name: facilityData.name });
+  const isFaciExist = await Facility.findOne({ name: this.name });
   if (isFaciExist) {
     throw new AppError(httpStatus.CONFLICT, 'Facility already exist');
   }
   next();
 });
 
-export const Facility = model<T_Facility>('Facility', facilitySchema);
+facilitySchema.statics.isFacitityExist = async (id) => {
+  const isFaciExist = await Facility.findById(id);
+  if (isFaciExist) {
+    return true;
+  } else {
+    false;
+  }
+};
+
+export const Facility = model<T_Facility, T_Facility_Find_Methods>(
+  'Facility',
+  facilitySchema,
+);

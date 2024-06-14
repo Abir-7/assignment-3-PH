@@ -66,7 +66,6 @@ const deleteBookingByUser: RequestHandler = catchAsync(
 const getAvailableTimeSlots: RequestHandler = catchAsync(
   async (req, res, next) => {
     const formattedDate = getFormattedDate();
-    console.log(formattedDate);
     const date = (req.query?.date as string) || formattedDate;
     const covertedDate = convertDate(date);
     const result =

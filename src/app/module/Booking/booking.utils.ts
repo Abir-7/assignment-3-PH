@@ -1,7 +1,6 @@
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { T_Booking, T_BookTime } from './booking.interface';
-import { Types } from 'mongoose';
 
 export const getTotalTimeInHour = (startTime: string, endTime: string) => {
   const startDate = new Date(`2000-01-01T${startTime}:00`);
@@ -12,7 +11,7 @@ export const getTotalTimeInHour = (startTime: string, endTime: string) => {
   const minutes = Math.floor((timeDiff % 3600000) / 60000);
 
   const timeDiffInHours = hours + minutes / 100;
-  console.log(timeDiffInHours, 'time');
+
   return timeDiffInHours;
 };
 export const hasTimeConflict = (
@@ -39,7 +38,6 @@ export const convertDate = (date: string) => {
   const yyyyMmDdRegex = /^\d{4}-\d{2}-\d{2}$/;
   if (ddMmYyyyRegex.test(date)) {
     const [day, month, year] = date.split('-').map(Number);
-    console.log(month);
     if (month < 1 || month > 12) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Invalid month in date');
     }

@@ -24,7 +24,7 @@ export const auth = (...userRole: T_UserRole[]) => {
       config.jwt_secrete_key as string,
     ) as JwtPayload;
 
-    const { role, email, iat, exp } = decoded;
+    const { role, email } = decoded;
 
     const user = await User.findOne({ email: email });
     //check user exixt or not

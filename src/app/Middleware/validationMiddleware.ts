@@ -1,4 +1,4 @@
-import { AnyZodObject, Schema } from 'zod';
+import { AnyZodObject } from 'zod';
 import catchAsync from '../utils/catchAsync';
 import { NextFunction, Request, Response } from 'express';
 

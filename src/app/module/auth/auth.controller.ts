@@ -18,15 +18,6 @@ const loginUser: RequestHandler = catchAsync(async (req, res) => {
   const loginData = req.body;
   const result = await AuthService.userLogin(loginData);
 
-  if (!result) {
-    return res.status(200).send({
-      success: false,
-      statusCode: 404,
-      message: 'No Data Found',
-      data: [],
-    });
-  }
-
   return res.status(200).send({
     success: true,
     statusCode: 200,

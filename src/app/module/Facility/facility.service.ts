@@ -1,3 +1,5 @@
+import httpStatus from 'http-status';
+import AppError from '../../errors/AppError';
 import { T_Facility } from './facility.interface';
 import { Facility } from './facility.model';
 
@@ -12,15 +14,28 @@ const createFacilityIntoDB = async (data: T_Facility) => {
 };
 
 const updateFacilityIntoDB = async (id: string, data: Partial<T_Facility>) => {
+  if (!(await Facility.isFacitityExist(id))) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'Facility not found! update failed.',
+    );
+  }
+
   const result = await Facility.findByIdAndUpdate(id, data, {
     new: true,
     runValidators: true,
   });
-  // console.log(result, 'test');
   return result;
 };
 
 const deleteFacilityFromDB = async (id: string) => {
+  if (!(await Facility.isFacitityExist(id))) {
+    throw new AppError(
+      httpStatus.NOT_FOUND,
+      'Facility not found! delete failed.',
+    );
+  }
+
   const result = await Facility.findByIdAndUpdate(
     id,
     { isDeleted: true },
@@ -29,7 +44,6 @@ const deleteFacilityFromDB = async (id: string) => {
       runValidators: true,
     },
   );
-  //console.log(result, 'test');
   return result;
 };
 

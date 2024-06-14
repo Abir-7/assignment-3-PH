@@ -10,22 +10,17 @@ import {
 } from './booking.utils';
 
 const createBookingIntoDb = async (data: T_Booking) => {
-  //console.log(data);
+  //check if facility exixt
   const isFacilityExist = await Facility.findById(data.facility);
-
   if (!isFacilityExist) {
     throw new AppError(httpStatus.NOT_FOUND, 'Facility not found');
   }
-
+  //get already booked time slot
   const getAllBookingTimeForProvidedDate = await Booking.find({
     facility: data.facility,
     date: data.date,
   }).select(['startTime', 'endTime', '_id']);
-
-  // console.log(getAllBookingTimeForProvidedDate);
-
   //check time conflict
-
   if (
     hasTimeConflict(getAllBookingTimeForProvidedDate, {
       startTime: data.startTime,
@@ -35,10 +30,11 @@ const createBookingIntoDb = async (data: T_Booking) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Seleted Time Not Available');
   }
 
+  //calculate payable  ammount for booking
   const totalTime = getTotalTimeInHour(data.startTime, data.endTime);
-
   data.payableAmount = totalTime * isFacilityExist.pricePerHour;
-  console.log(totalTime);
+
+  //create booking
   const result = await Booking.create(data);
 
   return result;
@@ -49,15 +45,12 @@ const getAllBookingFromDb = async () => {
   return result;
 };
 const getAllBookingByUserFromDb = async (id: string) => {
-  console.log(id);
   const result = await Booking.find({ user: id }).populate('facility');
 
   return result;
 };
 
 const deleteBookingByUserFromDb = async (userID: string, bookingID: string) => {
-  console.log(userID, bookingID);
-
   const isBookingExist = await Booking.findOne({
     _id: bookingID,
     user: userID,
@@ -83,12 +76,9 @@ const getAvailableTimeSlotsFromBooking = async (givenDate: string) => {
     'startTime',
     'endTime',
   ]);
-  console.log(bookings);
-  // if (!bookings.length) {
-  //   return bookings;
-  // }
+
   const availableTimeSlots = findAvailableTimeSlotForBooking(bookings);
-  //console.log(timeSlots, availableTimeSlots, bookings, 'gg');
+
   return availableTimeSlots;
 };
 

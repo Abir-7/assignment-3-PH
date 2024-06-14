@@ -1,8 +1,6 @@
 import { model, Schema, Types } from 'mongoose';
 import { T_Booking } from './booking.interface';
-import { Facility } from '../Facility/facility.model';
-import AppError from '../../errors/AppError';
-import httpStatus from 'http-status';
+
 import { bookingStatus } from './booking.const';
 
 export const bookingSchema = new Schema<T_Booking>({

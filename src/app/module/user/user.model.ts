@@ -23,18 +23,17 @@ export const userSchema = new Schema<T_User>({
 });
 
 userSchema.pre('save', async function (next) {
-  const userData = this;
-
-  const isUserExist = await User.findOne({ email: userData.email });
+  const isUserExist = await User.findOne({ email: this.email });
   if (isUserExist) {
     throw new AppError(httpstatus.CONFLICT, 'User already exist');
   }
-  userData.password = await bcrypt.hash(
+  this.password = await bcrypt.hash(
     this.password,
     Number(config.bcrypt_sault_round),
   );
   next();
 });
+
 userSchema.post('save', async function (data) {
   data.password = '**********************';
 });
