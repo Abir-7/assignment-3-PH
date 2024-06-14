@@ -17,6 +17,11 @@ const createBookingIntoDb = async (data: T_Booking) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Facility not found');
   }
 
+  //check if facility deleted
+  if (isFacilityExist.isDeleted) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Facility deleted');
+  }
+
   //get already booked time slot
   const getAllBookingTimeForProvidedDate = await Booking.find({
     facility: data.facility,

@@ -25,6 +25,10 @@ const createBookingIntoDb = (data) => __awaiter(void 0, void 0, void 0, function
     if (!isFacilityExist) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Facility not found');
     }
+    //check if facility deleted
+    if (isFacilityExist.isDeleted) {
+        throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Facility deleted');
+    }
     //get already booked time slot
     const getAllBookingTimeForProvidedDate = yield booking_model_1.Booking.find({
         facility: data.facility,
