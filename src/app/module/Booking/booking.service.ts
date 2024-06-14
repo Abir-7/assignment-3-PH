@@ -9,12 +9,14 @@ import {
   hasTimeConflict,
 } from './booking.utils';
 
+//create booking
 const createBookingIntoDb = async (data: T_Booking) => {
   //check if facility exixt
   const isFacilityExist = await Facility.findById(data.facility);
   if (!isFacilityExist) {
     throw new AppError(httpStatus.NOT_FOUND, 'Facility not found');
   }
+
   //get already booked time slot
   const getAllBookingTimeForProvidedDate = await Booking.find({
     facility: data.facility,
@@ -40,11 +42,12 @@ const createBookingIntoDb = async (data: T_Booking) => {
   return result;
 };
 
+//get all booking by admin
 const getAllBookingFromDb = async () => {
   const result = await Booking.find().populate('user').populate('facility');
   return result;
 };
-
+//get all booking by user
 const getAllBookingByUserFromDb = async (id: string) => {
   const result = await Booking.find({
     user: id,
@@ -52,7 +55,7 @@ const getAllBookingByUserFromDb = async (id: string) => {
 
   return result;
 };
-
+//cencel booking
 const deleteBookingByUserFromDb = async (userID: string, bookingID: string) => {
   const isBookingExist = await Booking.findOne({
     _id: bookingID,
@@ -70,7 +73,7 @@ const deleteBookingByUserFromDb = async (userID: string, bookingID: string) => {
   ).populate('facility');
   return result;
 };
-
+//get available time
 const getAvailableTimeSlotsFromBooking = async (givenDate: string) => {
   const date = givenDate;
 

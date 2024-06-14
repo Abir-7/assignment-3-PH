@@ -2,7 +2,6 @@ import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { T_Facility } from './facility.interface';
 import { Facility } from './facility.model';
-import mongoose from 'mongoose';
 
 const getAllFacilityFromDB = async () => {
   const result = await Facility.find({ isDeleted: false });
@@ -15,22 +14,29 @@ const createFacilityIntoDB = async (data: T_Facility) => {
 };
 
 const updateFacilityIntoDB = async (id: string, data: Partial<T_Facility>) => {
-  if (!(await Facility.isFacitityExist(new mongoose.Types.ObjectId(id)))) {
+  if (!(await Facility.isFacitityExist(id))) {
     throw new AppError(
       httpStatus.NOT_FOUND,
       'Facility not found! update failed.',
     );
   }
-
-  const result = await Facility.findByIdAndUpdate(id, data, {
+  if (data?.name) {
+    const isNameSame = await Facility.findOne({ name: data.name });
+    if (isNameSame) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'Same Facility Name Already Exist',
+      );
+    }
+  }
+  const result = await Facility.findOneAndUpdate({ _id: id }, data, {
     new: true,
-    runValidators: true,
   });
   return result;
 };
 
 const deleteFacilityFromDB = async (id: string) => {
-  if (!(await Facility.isFacitityExist(new mongoose.Types.ObjectId(id)))) {
+  if (!(await Facility.isFacitityExist(id))) {
     throw new AppError(
       httpStatus.NOT_FOUND,
       'Facility not found! delete failed.',

@@ -45,7 +45,7 @@ const updateFacility = (0, catchAsync_1.default)((req, res, next) => __awaiter(v
         success: true,
         statusCode: 200,
         message: 'Facility updated successfully',
-        data: result,
+        data: {},
     });
 }));
 const deleteFacility = (0, catchAsync_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {

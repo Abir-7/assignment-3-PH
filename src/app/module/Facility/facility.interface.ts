@@ -9,5 +9,5 @@ export interface T_Facility {
 }
 
 export interface T_Facility_Find_Methods extends Model<T_Facility> {
-  isFacitityExist(id: Types.ObjectId): Promise<boolean>;
+  isFacitityExist(id: string): Promise<boolean>;
 }

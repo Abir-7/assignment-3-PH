@@ -18,6 +18,7 @@ const facility_model_1 = require("../Facility/facility.model");
 const booking_model_1 = require("./booking.model");
 const AppError_1 = __importDefault(require("../../errors/AppError"));
 const booking_utils_1 = require("./booking.utils");
+//create booking
 const createBookingIntoDb = (data) => __awaiter(void 0, void 0, void 0, function* () {
     //check if facility exixt
     const isFacilityExist = yield facility_model_1.Facility.findById(data.facility);
@@ -43,16 +44,19 @@ const createBookingIntoDb = (data) => __awaiter(void 0, void 0, void 0, function
     const result = yield booking_model_1.Booking.create(data);
     return result;
 });
+//get all booking by admin
 const getAllBookingFromDb = () => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield booking_model_1.Booking.find().populate('user').populate('facility');
     return result;
 });
+//get all booking by user
 const getAllBookingByUserFromDb = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield booking_model_1.Booking.find({
         user: id,
     }).populate('facility');
     return result;
 });
+//cencel booking
 const deleteBookingByUserFromDb = (userID, bookingID) => __awaiter(void 0, void 0, void 0, function* () {
     const isBookingExist = yield booking_model_1.Booking.findOne({
         _id: bookingID,
@@ -64,6 +68,7 @@ const deleteBookingByUserFromDb = (userID, bookingID) => __awaiter(void 0, void 
     const result = yield booking_model_1.Booking.findByIdAndUpdate(bookingID, { isBooked: 'canceled' }, { new: true }).populate('facility');
     return result;
 });
+//get available time
 const getAvailableTimeSlotsFromBooking = (givenDate) => __awaiter(void 0, void 0, void 0, function* () {
     const date = givenDate;
     const bookings = yield booking_model_1.Booking.find({ date: date }).select([
