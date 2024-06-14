@@ -44,8 +44,11 @@ const getAllBookingFromDb = async () => {
   const result = await Booking.find().populate('user').populate('facility');
   return result;
 };
+
 const getAllBookingByUserFromDb = async (id: string) => {
-  const result = await Booking.find({ user: id }).populate('facility');
+  const result = await Booking.find({
+    user: id,
+  }).populate('facility');
 
   return result;
 };
@@ -64,7 +67,7 @@ const deleteBookingByUserFromDb = async (userID: string, bookingID: string) => {
     bookingID,
     { isBooked: 'canceled' },
     { new: true },
-  );
+  ).populate('facility');
   return result;
 };
 

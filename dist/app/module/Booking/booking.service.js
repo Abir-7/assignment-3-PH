@@ -48,7 +48,9 @@ const getAllBookingFromDb = () => __awaiter(void 0, void 0, void 0, function* ()
     return result;
 });
 const getAllBookingByUserFromDb = (id) => __awaiter(void 0, void 0, void 0, function* () {
-    const result = yield booking_model_1.Booking.find({ user: id }).populate('facility');
+    const result = yield booking_model_1.Booking.find({
+        user: id,
+    }).populate('facility');
     return result;
 });
 const deleteBookingByUserFromDb = (userID, bookingID) => __awaiter(void 0, void 0, void 0, function* () {
@@ -59,7 +61,7 @@ const deleteBookingByUserFromDb = (userID, bookingID) => __awaiter(void 0, void 
     if (!isBookingExist) {
         throw new AppError_1.default(http_status_1.default.NOT_FOUND, 'Booking not found');
     }
-    const result = yield booking_model_1.Booking.findByIdAndUpdate(bookingID, { isBooked: 'canceled' }, { new: true });
+    const result = yield booking_model_1.Booking.findByIdAndUpdate(bookingID, { isBooked: 'canceled' }, { new: true }).populate('facility');
     return result;
 });
 const getAvailableTimeSlotsFromBooking = (givenDate) => __awaiter(void 0, void 0, void 0, function* () {

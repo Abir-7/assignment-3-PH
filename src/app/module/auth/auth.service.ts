@@ -17,7 +17,7 @@ const userLogin = async (logInData: T_UserLogin) => {
   const user = await User.findOne({ email: logInData.email }).select(['-__v']);
   if (!user) {
     throw new AppError(
-      httpStatus.NOT_FOUND,
+      httpStatus.BAD_REQUEST,
       'User not found! Please Check your email.',
     );
   }
@@ -28,7 +28,7 @@ const userLogin = async (logInData: T_UserLogin) => {
   );
   if (!isPasswordMatch) {
     throw new AppError(
-      httpStatus.NOT_FOUND,
+      httpStatus.BAD_REQUEST,
       'Password not matched! Please check your password',
     );
   }

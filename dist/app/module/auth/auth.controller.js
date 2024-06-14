@@ -20,10 +20,17 @@ const createUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, voi
     const userData = req.body;
     const result = yield auth_service_1.AuthService.createUserIntoDB(userData);
     return (0, sendResponse_1.default)(res, {
-        data: result,
-        statusCode: 200,
         success: true,
+        statusCode: 200,
         message: 'User registered successfully',
+        data: {
+            _id: result._id,
+            name: result.name,
+            email: result.email,
+            role: result.role,
+            phone: result.phone,
+            address: result.address,
+        },
     });
 }));
 const loginUser = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
