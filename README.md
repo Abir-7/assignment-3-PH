@@ -18,8 +18,8 @@ a simple project for people to book sports facilities hassle-free.
 #### LiveLink: https://assignment-3-level-2-ph.vercel.app
 
 #### User-Info:
-* email:
-* password:
+* email: abir@gmail.com
+* password:abir123
 #### Admin-Info:
-* email:
-* password:
+* email: maliha@gmail.com
+* password: maliha123
