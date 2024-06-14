@@ -3,10 +3,10 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.bookingZodValidationSchema = void 0;
 const zod_1 = require("zod");
 const timeStringSchema = zod_1.z.string().refine((time) => {
-    const regex = /^([01]?[0-9]|2[0-3]):[0-5][0-9]$/; // 00-09 10-19 20-23
+    const regex = /^(?:[01]\d|2[0-3]):[0-5]\d$/; // 00-23 for hours, 00-59 for minutes, both requiring two digits
     return regex.test(time);
 }, {
-    message: 'Invalid time format , expected "HH:MM" in 24 hours format',
+    message: 'Invalid time format, expected "HH:MM" in 24-hour format',
 });
 exports.bookingZodValidationSchema = zod_1.z.object({
     body: zod_1.z

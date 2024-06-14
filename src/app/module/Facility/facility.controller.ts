@@ -37,7 +37,7 @@ const updateFacility: RequestHandler = catchAsync(async (req, res, next) => {
     success: true,
     statusCode: 200,
     message: 'Facility updated successfully',
-    data: {},
+    data: result,
   });
 });
 
