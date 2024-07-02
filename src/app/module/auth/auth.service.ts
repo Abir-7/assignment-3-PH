@@ -48,7 +48,7 @@ const userLogin = async (logInData: T_UserLogin) => {
   );
 
   return {
-    accessToken: `Bearer ${accessToken}`,
+    accessToken: accessToken,
     user: {
       _id: user._id,
       name: user.name,

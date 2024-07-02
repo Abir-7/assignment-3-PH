@@ -43,7 +43,7 @@ const userLogin = (logInData) => __awaiter(void 0, void 0, void 0, function* () 
     // create token
     const accessToken = (0, auth_utils_1.createToken)(userJWtData, config_1.default.jwt_secrete_key, config_1.default.jwt_secrete_date);
     return {
-        accessToken: `Bearer ${accessToken}`,
+        accessToken: accessToken,
         user: {
             _id: user._id,
             name: user.name,
